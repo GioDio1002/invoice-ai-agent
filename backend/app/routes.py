@@ -41,7 +41,7 @@ def upload_file(
     return {"filename": file.filename, "saved_as": name, "path": str(path)}
 
 
-@router.post("/upload-invoice", response_model=InvoiceOut)
+@router.post("/upload-invoice", response_model=InvoiceOut)  # includes workflow_steps when present
 def upload_invoice(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -56,9 +56,9 @@ def upload_invoice(
     except OSError as e:
         raise HTTPException(status_code=500, detail=f"Save failed: {e}") from e
     try:
-        from app.agents import run_ocr_and_extract, save_invoice_from_extraction
+        from app.agents import run_ocr_and_extract_with_trace, save_invoice_from_extraction
 
-        raw_text, extracted_json = run_ocr_and_extract(str(path))
+        raw_text, extracted_json, steps_log = run_ocr_and_extract_with_trace(str(path))
         inv = save_invoice_from_extraction(db, raw_text, extracted_json, file_path=str(path))
         return InvoiceOut(
             id=inv.id,
@@ -69,6 +69,7 @@ def upload_invoice(
             extracted_json=inv.extracted_json,
             file_path=inv.file_path,
             created_at=inv.created_at.isoformat(),
+            workflow_steps=steps_log,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Extraction failed: {e}") from e

@@ -3,5 +3,5 @@ import UploadForm from './UploadForm'
 
 test('renders upload invoice button', () => {
   render(<UploadForm />)
-  expect(screen.getByText(/Upload & Extract Invoice/i)).toBeInTheDocument()
+  expect(screen.getByText(/Upload & extract/i)).toBeInTheDocument()
 })

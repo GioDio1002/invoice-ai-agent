@@ -14,11 +14,29 @@ from app.schemas import MatchResult, TaxReportOut
 
 
 def run_ocr_and_extract(file_path: str) -> tuple[str, dict[str, Any]]:
-    """Run OCR on file, then LLM extraction. Returns (raw_text, extracted_json)."""
-    from pathlib import Path
-    raw_text = extract_text_from_file(Path(file_path))
-    extracted = parse_invoice_with_llm(raw_text)
+    """Run LangGraph ingest workflow: OCR → extract → validate. Returns (raw_text, extracted_json)."""
+    from app.langgraph_workflow import run_invoice_ingest_workflow
+
+    final = run_invoice_ingest_workflow(file_path)
+    if final.get("error"):
+        raise RuntimeError(final["error"])
+    raw_text = final.get("raw_text") or ""
+    extracted = final.get("extracted_json") or {}
     return raw_text, extracted
+
+
+def run_ocr_and_extract_with_trace(file_path: str) -> tuple[str, dict[str, Any], list[str]]:
+    """Same as run_ocr_and_extract; third return value is workflow steps_log for UI/API."""
+    from app.langgraph_workflow import run_invoice_ingest_workflow
+
+    final = run_invoice_ingest_workflow(file_path)
+    if final.get("error"):
+        raise RuntimeError(final["error"])
+    return (
+        final.get("raw_text") or "",
+        final.get("extracted_json") or {},
+        list(final.get("steps_log") or []),
+    )
 
 
 def save_invoice_from_extraction(

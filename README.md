@@ -13,9 +13,9 @@ Saves SMEs **~$50K/year** by replacing 3 finance roles: data entry, matching, an
 
 ## Tech Stack
 
-- **Frontend**: React (Vite), Material-UI
+- **Frontend**: React (Vite), Tailwind CSS v4 (Untitled UI–style layout & tokens)
 - **Backend**: Python, FastAPI, SQLAlchemy (SQLite)
-- **AI**: LangChain agents, Ollama (local) or OpenAI (fallback), FAISS RAG
+- **AI**: LangGraph invoice ingest pipeline (OCR → extract → validate), LangChain agents for match/tax, Ollama or OpenAI, FAISS RAG
 
 ## Quick Start (Local)
 

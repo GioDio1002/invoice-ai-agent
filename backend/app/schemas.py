@@ -16,6 +16,7 @@ class InvoiceOut(BaseModel):
     extracted_json: dict[str, Any] | None = None
     file_path: str | None = None
     created_at: str
+    workflow_steps: list[str] | None = None  # LangGraph ingest pipeline steps (upload only)
 
 
 class MatchRequest(BaseModel):

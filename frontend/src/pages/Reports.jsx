@@ -1,14 +1,15 @@
-import { Typography } from '@mui/material'
 import InvoiceList from '../components/InvoiceList'
 
 export default function Reports() {
   return (
-    <>
-      <Typography variant="h4" gutterBottom>Reports</Typography>
-      <Typography color="text.secondary" sx={{ mb: 1 }}>
-        Generate tax reports from the Invoices table (Tax button per row). Match and tax data appear in dialogs.
-      </Typography>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-gray-900">Reports</h1>
+        <p className="mt-1 text-gray-500">
+          Generate tax reports from invoice rows (Tax on each row).
+        </p>
+      </div>
       <InvoiceList />
-    </>
+    </div>
   )
 }
